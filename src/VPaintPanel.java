@@ -9,11 +9,13 @@ import java.util.ArrayList;
  */
 public class VPaintPanel extends JPanel{
 
+    private final int size;
     private final int panelSize;
     private ArrayList<JButton> buttons;
 
     public VPaintPanel (int size, boolean isEnabled) {
         setLayout(new GridLayout(3,3));
+        this.size = size;
         panelSize = size*size;
         buttons = new ArrayList<>();
         for (int i=0; i<panelSize; i++){
@@ -33,6 +35,16 @@ public class VPaintPanel extends JPanel{
             list.add(i,buttons.get(i).isContentAreaFilled()? 1:-1);
         }
         return list;
+    }
+
+    public void paintPixels(ArrayList<Integer> output) {
+        for (int i=0; i<output.size(); i++) {
+            if (output.get(i)>0){
+                buttons.get(i).setContentAreaFilled(true);
+            } else {
+                buttons.get(i).setContentAreaFilled(false);
+            }
+        }
     }
 
     private void setButtons(){

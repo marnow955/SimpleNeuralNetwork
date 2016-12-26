@@ -31,6 +31,19 @@ public class VMain extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<Integer> inputMatrix = buttons.getPixelsValuesArray();
                 MMain calc = new MMain();
+                ArrayList<Integer> input = buttons.getPixelsValuesArray();
+                Matrix inputM = new Matrix(9,1);
+                for (int i=0; i<input.size(); i++) {
+                    inputM.add(i,0,input.get(i));
+                }
+                Matrix result = calc.getAnswer(inputM);
+                ArrayList<Integer> output = new ArrayList<Integer>();
+                for (int i=0; i<result.getNumberOfRows(); i++){
+                    for (int j=0; j<result.getNumberOfColumns(); j++){
+                        output.add(i*result.getNumberOfColumns()+j,result.get(i,j));
+                    }
+                }
+                answer.paintPixels(output);
             }
         });
 
