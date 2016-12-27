@@ -14,7 +14,7 @@ public class VPaintPanel extends JPanel{
     private ArrayList<JButton> buttons;
 
     public VPaintPanel (int size, boolean isEnabled) {
-        setLayout(new GridLayout(3,3));
+        setLayout(new GridLayout(size,size));
         this.size = size;
         panelSize = size*size;
         buttons = new ArrayList<>();

@@ -19,14 +19,9 @@ public class MMain {
         ArrayList<Integer> np1;
         ArrayList<Integer> np2;
         ArrayList<Integer> np3;
-        try {
-            np1 = readMatrix("xSign.txt");
-            np2 = readMatrix("oSign.txt");
-            np3 = readMatrix("-Sign.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
+        np1 = PatternFileReader.readFromFile("xSign.txt");
+        np2 = PatternFileReader.readFromFile("oSign.txt");
+        np3 = PatternFileReader.readFromFile("-Sign.txt");
         Matrix p = new Matrix(9,3);
         for (int i=0; i<9; i++) {
             p.add(i,0,np1.get(i));
@@ -41,17 +36,4 @@ public class MMain {
         return Matrix.multiply(weightsM,input);
     }
 
-    private ArrayList<Integer> readMatrix(String filename) throws FileNotFoundException {
-        ArrayList<Integer> list = new ArrayList<>();
-
-        File file = new File(filename);
-        Scanner in = new Scanner(file);
-
-        String line = in.nextLine();
-        String[] values = line.split(" ");
-        for (int i=0; i<values.length; i++) {
-            list.add(i, Integer.parseInt(values[i]));
-        }
-        return list;
-    }
 }

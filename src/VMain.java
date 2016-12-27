@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class VMain extends JFrame {
 
-    private final int signSize = 3;
+    private final int signSize;
 
     private JPanel mainPanel;
     private JPanel leftPanel;
@@ -18,10 +18,12 @@ public class VMain extends JFrame {
     private VPaintPanel answer;
 
     private JButton submitButton;
+    public boolean IS_COMPLETE = false;
 
-    public VMain() {
+    public VMain(int signSize) {
         super("Sign recoginize");
 
+        this.signSize = signSize;
         setMainPanel();
         setLeftPanel();
         setRightPanel();
@@ -29,21 +31,7 @@ public class VMain extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<Integer> inputMatrix = buttons.getPixelsValuesArray();
-                MMain calc = new MMain();
-                ArrayList<Integer> input = buttons.getPixelsValuesArray();
-                Matrix inputM = new Matrix(9,1);
-                for (int i=0; i<input.size(); i++) {
-                    inputM.add(i,0,input.get(i));
-                }
-                Matrix result = calc.getAnswer(inputM);
-                ArrayList<Integer> output = new ArrayList<Integer>();
-                for (int i=0; i<result.getNumberOfRows(); i++){
-                    for (int j=0; j<result.getNumberOfColumns(); j++){
-                        output.add(i*result.getNumberOfColumns()+j,result.get(i,j));
-                    }
-                }
-                answer.paintPixels(output);
+                IS_COMPLETE = true;
             }
         });
 
@@ -78,5 +66,13 @@ public class VMain extends JFrame {
         answer = new VPaintPanel(signSize, false);
         rightPanel.add(answer);
         mainPanel.add(rightPanel, BorderLayout.LINE_END);
+    }
+
+    public ArrayList<Integer> getButtonsValues() {
+        return buttons.getPixelsValuesArray();
+    }
+
+    public void showResult(ArrayList<Integer> output) {
+        answer.paintPixels(output);
     }
 }
