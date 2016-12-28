@@ -67,8 +67,13 @@ public class Network {
             output = PatternFileReader.readFromFile("xSign.txt");
         } else if (results[1] == 1) {
             output = PatternFileReader.readFromFile("oSign.txt");
-        } else if (results[2] == 1)
+        } else if (results[2] == 1) {
             output = PatternFileReader.readFromFile("-Sign.txt");
+        } else {
+            for (int i=0; i<input.size(); i++) {
+                output.add(i,-1);
+            }
+        }
         return output;
     }
 }
