@@ -32,7 +32,7 @@ public class VPaintPanel extends JPanel{
     public ArrayList<Integer> getPixelsValuesArray() {
         ArrayList<Integer> list = new ArrayList<>();
         for (int i=0; i<panelSize; i++) {
-            list.add(i,buttons.get(i).isContentAreaFilled()? 1:-1);
+            list.add(i,buttons.get(i).isContentAreaFilled()? 1:0);
         }
         return list;
     }

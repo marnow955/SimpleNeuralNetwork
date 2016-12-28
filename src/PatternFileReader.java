@@ -8,8 +8,8 @@ import java.util.Scanner;
  */
 public class PatternFileReader {
 
-    public static ArrayList<Integer> readFromFile(String filename) {
-        ArrayList<Integer> list = new ArrayList<>();
+    public static ArrayList<Double> readFromFile(String filename) {
+        ArrayList<Double> list = new ArrayList<>();
 
         File file = new File(filename);
         Scanner in = null;
@@ -23,7 +23,7 @@ public class PatternFileReader {
         String line = in.nextLine();
         String[] values = line.split(" ");
         for (int i=0; i<values.length; i++) {
-            list.add(i, Integer.parseInt(values[i]));
+            list.add(i, Double.parseDouble(values[i]));
         }
         return list;
     }
