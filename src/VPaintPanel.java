@@ -9,14 +9,16 @@ import java.util.ArrayList;
  */
 public class VPaintPanel extends JPanel{
 
-    private final int size;
+    private final int rows;
+    private final int cols;
     private final int panelSize;
     private ArrayList<JButton> buttons;
 
-    public VPaintPanel (int size, boolean isEnabled) {
-        setLayout(new GridLayout(size,size));
-        this.size = size;
-        panelSize = size*size;
+    public VPaintPanel (int rows, int cols, boolean isEnabled) {
+        this.rows = rows;
+        this.cols = cols;
+        setLayout(new GridLayout(rows,cols));
+        panelSize = rows * cols;
         buttons = new ArrayList<>();
         for (int i=0; i<panelSize; i++){
             buttons.add(i,new JButton());
@@ -29,15 +31,15 @@ public class VPaintPanel extends JPanel{
         setListeners();
     }
 
-    public ArrayList<Integer> getPixelsValuesArray() {
-        ArrayList<Integer> list = new ArrayList<>();
+    public ArrayList<Double> getPixelsValuesArray() {
+        ArrayList<Double> list = new ArrayList<>();
         for (int i=0; i<panelSize; i++) {
-            list.add(i,buttons.get(i).isContentAreaFilled()? 1:0);
+            list.add(i,buttons.get(i).isContentAreaFilled()? 1.0:0.0);
         }
         return list;
     }
 
-    public void paintPixels(ArrayList<Integer> output) {
+    public void paintPixels(ArrayList<Double> output) {
         for (int i=0; i<output.size(); i++) {
             if (output.get(i)>0){
                 buttons.get(i).setContentAreaFilled(true);

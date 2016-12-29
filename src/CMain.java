@@ -1,3 +1,5 @@
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 /**
@@ -5,38 +7,59 @@ import java.util.ArrayList;
  */
 public class CMain {
 
+    private static final int numberOfPattern = 3;  //numberOfOutputs
+    private static final int rows = 3;
+    private static final int cols = 3;
+    private static final int numbersOfInputs = rows * cols;
+    private static final int numberOfHiddenNeurons = 5; //>= numberOfPatterns
+
     private static VMain window;
     private static Network network;
 
+    private static ArrayList<String> patternsSymbols;
+    private static ArrayList<ArrayList<Double>> patterns;
+
     public static final void main(String[] args){
-        window = new VMain(3);
-        network = new Network(3);
-        network.trainNetwork();
+        window = new VMain(rows, cols);
+        network = new Network(numbersOfInputs,numberOfHiddenNeurons,numberOfPattern);
+        patterns = new ArrayList<>();
+        patternsSymbols = new ArrayList<>();
+        for (int i=0; i<numberOfPattern; i++) {
+            String filename = "Pattern" + (i+1) + ".txt";
+            patternsSymbols.add(i,PatternFileReader.getPatternSymbol(filename));
+            ArrayList<Double> input = PatternFileReader.readFromFile(filename);
+            patterns.add(i,input);
+        }
+        network.trainNetwork(patterns);
         listenSubmitButton();
     }
 
     public static void listenSubmitButton() {
-        while (!window.IS_COMPLETE) {
-            if (!window.isActive())
-                return;
-        }
-
-        calculateAnswer();
-        window.IS_COMPLETE = false;
-        listenSubmitButton();
+        window.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (window.IS_COMPLETE){
+                    calculateAnswer();
+                    window.IS_COMPLETE = false;
+                }
+            }
+        });
     }
 
     public static void calculateAnswer() {
-        ArrayList<Integer> input = window.getButtonsValues();
-        ArrayList<Double> inputD = new ArrayList<>();
-        for (int i=0; i<input.size();i++) {
-            inputD.add(i, Double.valueOf(input.get(i)));
+        ArrayList<Double> input = window.getButtonsValues();
+
+        ArrayList<Double> networkAnswer = network.getAnswer(input);
+        System.out.println("Network answer:");
+        for (int i=0; i<numberOfPattern; i++) {
+            System.out.println(patternsSymbols.get(i)+": "+networkAnswer.get(i));
         }
-        ArrayList<Double> outputD = network.getAnswer(inputD);
-        ArrayList<Integer> output = new ArrayList<>();
-        for (int i=0; i<outputD.size(); i++) {
-            output.add(i,outputD.get(i).intValue());
+        int maxIndex = 0;
+        for (int i=1; i<numberOfPattern; i++) {
+            if (networkAnswer.get(i) > networkAnswer.get(maxIndex)) {
+                maxIndex = i;
+            }
         }
-        window.showResult(output);
+        window.showResult(patterns.get(maxIndex));
     }
 }

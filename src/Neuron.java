@@ -26,10 +26,6 @@ public class Neuron {
     }
 
     public double applyActivationFunction(double weightedSum) {
-//        int result = 0;
-//        if (weightedSum>1)
-//            result = 1;
-//        return result;
         return 1/(1+Math.exp(-ALFA_RATE*weightedSum));
     }
 

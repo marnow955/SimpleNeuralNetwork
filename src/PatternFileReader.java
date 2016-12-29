@@ -20,11 +20,25 @@ public class PatternFileReader {
             return null;
         }
 
+        in.nextLine();
         String line = in.nextLine();
         String[] values = line.split(" ");
         for (int i=0; i<values.length; i++) {
             list.add(i, Double.parseDouble(values[i]));
         }
         return list;
+    }
+
+    public static String getPatternSymbol(String filename) {
+        File file = new File(filename);
+        Scanner in = null;
+        try {
+            in = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return in.nextLine().trim();
     }
 }

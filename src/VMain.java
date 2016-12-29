@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +11,8 @@ import java.util.ArrayList;
  */
 public class VMain extends JFrame {
 
-    private final int signSize;
+    private final int rows;
+    private final int cols;
 
     private JPanel mainPanel;
     private JPanel leftPanel;
@@ -18,12 +21,16 @@ public class VMain extends JFrame {
     private VPaintPanel answer;
 
     private JButton submitButton;
-    public boolean IS_COMPLETE = false;
+    public static boolean IS_COMPLETE = false;
 
-    public VMain(int signSize) {
+    private PropertyChangeSupport pCS = new PropertyChangeSupport(this);
+
+    public VMain(int rows, int cols) {
         super("Sign recoginize");
 
-        this.signSize = signSize;
+        this.rows = rows;
+        this.cols = cols;
+
         setMainPanel();
         setLeftPanel();
         setRightPanel();
@@ -31,7 +38,9 @@ public class VMain extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                boolean oldIS_COMPLETE = IS_COMPLETE;
                 IS_COMPLETE = true;
+                pCS.firePropertyChange("IS_COMPLETE",oldIS_COMPLETE,IS_COMPLETE);
             }
         });
 
@@ -40,6 +49,14 @@ public class VMain extends JFrame {
         setResizable(false);
 
         setVisible(true);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pCS.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        pCS.removePropertyChangeListener(listener);
     }
 
     private void setMainPanel() {
@@ -55,7 +72,7 @@ public class VMain extends JFrame {
     private void setLeftPanel() {
         leftPanel = new JPanel(new BorderLayout());
         leftPanel.add(new JLabel("Draw:"), BorderLayout.PAGE_START);
-        buttons = new VPaintPanel(signSize, true);
+        buttons = new VPaintPanel(rows, cols, true);
         leftPanel.add(buttons);
         mainPanel.add(leftPanel, BorderLayout.LINE_START);
     }
@@ -63,16 +80,16 @@ public class VMain extends JFrame {
     private void setRightPanel() {
         rightPanel = new JPanel(new BorderLayout());
         rightPanel.add(new JLabel("I see:"), BorderLayout.PAGE_START);
-        answer = new VPaintPanel(signSize, false);
+        answer = new VPaintPanel(rows, cols, false);
         rightPanel.add(answer);
         mainPanel.add(rightPanel, BorderLayout.LINE_END);
     }
 
-    public ArrayList<Integer> getButtonsValues() {
+    public ArrayList<Double> getButtonsValues() {
         return buttons.getPixelsValuesArray();
     }
 
-    public void showResult(ArrayList<Integer> output) {
+    public void showResult(ArrayList<Double> output) {
         answer.paintPixels(output);
     }
 }
