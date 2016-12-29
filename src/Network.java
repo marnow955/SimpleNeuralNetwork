@@ -5,7 +5,7 @@ import java.util.ArrayList;
  */
 public class Network {
 
-    private static final double errorMargin = 0.1;
+    public static double errorMargin = 0.1;
 
     private final int inputCount;
     private final int outputNeuronsCount;

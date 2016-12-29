@@ -1,17 +1,21 @@
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by marek on 2016-12-23.
  */
 public class CMain {
 
-    private static final int numberOfPattern = 3;  //numberOfOutputs
-    private static final int rows = 3;
-    private static final int cols = 3;
-    private static final int numbersOfInputs = rows * cols;
-    private static final int numberOfHiddenNeurons = 5; //>= numberOfPatterns
+    private static final ArrayList<String> propertyNames = new ArrayList<String>(Arrays.asList(
+            "rows","cols","numberOfPatterns","numberOfHiddenNeurons","errorMargin","learningRatio","alfaRate"
+    ));
+    private static int numberOfPatterns = 3;  //numberOfOutputs
+    private static int rows = 3;
+    private static int cols = 3;
+    private static int numbersOfInputs;
+    private static int numberOfHiddenNeurons = 5; //>= numberOfPatterns
 
     private static VMain window;
     private static Network network;
@@ -20,17 +24,11 @@ public class CMain {
     private static ArrayList<ArrayList<Double>> patterns;
 
     public static final void main(String[] args){
-        window = new VMain(rows, cols);
-        network = new Network(numbersOfInputs,numberOfHiddenNeurons,numberOfPattern);
-        patterns = new ArrayList<>();
-        patternsSymbols = new ArrayList<>();
-        for (int i=0; i<numberOfPattern; i++) {
-            String filename = "Pattern" + (i+1) + ".txt";
-            patternsSymbols.add(i,PatternFileReader.getPatternSymbol(filename));
-            ArrayList<Double> input = PatternFileReader.readFromFile(filename);
-            patterns.add(i,input);
-        }
+        loadProperties();
+        readPatterns();
+        network = new Network(numbersOfInputs,numberOfHiddenNeurons, numberOfPatterns);
         network.trainNetwork(patterns);
+        window = new VMain(rows, cols);
         listenSubmitButton();
     }
 
@@ -51,15 +49,62 @@ public class CMain {
 
         ArrayList<Double> networkAnswer = network.getAnswer(input);
         System.out.println("Network answer:");
-        for (int i=0; i<numberOfPattern; i++) {
+        for (int i = 0; i< numberOfPatterns; i++) {
             System.out.println(patternsSymbols.get(i)+": "+networkAnswer.get(i));
         }
         int maxIndex = 0;
-        for (int i=1; i<numberOfPattern; i++) {
+        for (int i = 1; i< numberOfPatterns; i++) {
             if (networkAnswer.get(i) > networkAnswer.get(maxIndex)) {
                 maxIndex = i;
             }
         }
         window.showResult(patterns.get(maxIndex));
+    }
+
+    private static void readPatterns() {
+        patterns = new ArrayList<>();
+        patternsSymbols = new ArrayList<>();
+        for (int i = 0; i< numberOfPatterns; i++) {
+            String filename = "Pattern" + (i+1) + ".txt";
+            patternsSymbols.add(i,PatternFileReader.getPatternSymbol(filename));
+            ArrayList<Double> input = PatternFileReader.readFromFile(filename);
+            patterns.add(i,input);
+        }
+    }
+    
+    private static void loadProperties() {
+        ConfigReader reader = new ConfigReader("config.txt",propertyNames);
+        Integer integerValue;
+        Double doubleValue;
+        
+        integerValue = reader.loadIntegerProperty("rows");
+        if (integerValue!=null)
+            rows = integerValue;
+
+        integerValue = reader.loadIntegerProperty("cols");
+        if (integerValue!=null)
+            cols = integerValue;
+
+        integerValue = reader.loadIntegerProperty("numberOfPatterns");
+        if (integerValue!=null)
+            numberOfPatterns = integerValue;
+
+        integerValue = reader.loadIntegerProperty("numberOfHiddenNeurons");
+        if (integerValue!=null)
+            numberOfHiddenNeurons = integerValue;
+
+        doubleValue = reader.loadDoubleProperty("errorMargin");
+        if (doubleValue!=null)
+            Network.errorMargin = doubleValue;
+
+        doubleValue = reader.loadDoubleProperty("learningRatio");
+        if (doubleValue!=null)
+            Neuron.LEARNING_RATIO = doubleValue;
+
+        doubleValue = reader.loadDoubleProperty("alfaRate");
+        if (doubleValue!=null)
+            Neuron.ALFA_RATE = doubleValue;
+
+        numbersOfInputs = rows * cols;
     }
 }

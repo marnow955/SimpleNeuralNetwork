@@ -4,8 +4,8 @@ import java.util.ArrayList;
  * Created by marek on 2016-12-27.
  */
 public class Neuron {
-    private static final double LEARNING_RATIO = 0.05;
-    private static final double ALFA_RATE = 1.0;
+    public static double LEARNING_RATIO = 0.05;
+    public static double ALFA_RATE = 1.0;
     private final int weightsCount;
 
     private ArrayList<Double> weights;
