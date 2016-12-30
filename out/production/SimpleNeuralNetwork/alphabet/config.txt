@@ -1,0 +1,21 @@
+# Config file
+#
+# Instruction:
+# To set up property write: nameOfProperty=value
+# If property is not set up it have default value
+# It is important to write it without any spaces!
+#
+# Properties:
+# rows - default: 3 - number of rows of pixels to display
+# cols - default: 3 - number of columns of pixels to display
+#        number of rows and cols depend numberOfInputs - rows*cols
+# numberOfPatterns - default: 3 - numbre of patterns and outputs
+# numberOfHiddenNeurons - default: 5 - number of neurons in hidden layer
+# errorMargin - default: 0.1 - permissible value of error in network response
+# learningRatio - default: 0.05 - depend how fast is network learning
+# alfaRate - default: 1.0 - value of alfa rate in activation function (logistic function)
+
+rows=7
+cols=5
+numberOfHiddenNeurons=12
+errorMargin=0.01

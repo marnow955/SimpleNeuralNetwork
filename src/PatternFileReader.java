@@ -21,10 +21,14 @@ public class PatternFileReader {
         }
 
         in.nextLine();
-        String line = in.nextLine();
-        String[] values = line.split(" ");
-        for (int i=0; i<values.length; i++) {
-            list.add(i, Double.parseDouble(values[i]));
+        int n = 0;
+        while (in.hasNext()) {
+            String line = in.nextLine();
+            String[] values = line.split(" ");
+            for (int i = 0; i < values.length; i++) {
+                list.add(n*values.length+i, Double.parseDouble(values[i]));
+            }
+            n++;
         }
         return list;
     }
