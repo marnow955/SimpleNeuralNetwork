@@ -13,9 +13,12 @@
 # numberOfHiddenNeurons - default: 5 - number of neurons in hidden layer
 # errorMargin - default: 0.1 - permissible value of error in network response
 # learningRatio - default: 0.05 - depend how fast is network learning
-# alfaRate - default: 1.0 - value of alfa rate in activation function (logistic function)
+# betaRate - default: 1.0 - value of alfa rate in activation function (logistic function)
 
+numberOfPatterns=26
 rows=7
 cols=5
-numberOfHiddenNeurons=12
-errorMargin=0.01
+numberOfHiddenNeurons=10
+errorMargin=0.1
+learningRatio=0.1
+betaRate=0.05

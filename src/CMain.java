@@ -1,3 +1,9 @@
+import data.ConfigReader;
+import data.PatternFileReader;
+import gui.VMain;
+import network.Network;
+import network.Neuron;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -8,8 +14,10 @@ import java.util.Arrays;
  */
 public class CMain {
 
+    private static final String dataSetName = "resources/x,o,-,+/";
+
     private static final ArrayList<String> propertyNames = new ArrayList<String>(Arrays.asList(
-            "rows","cols","numberOfPatterns","numberOfHiddenNeurons","errorMargin","learningRatio","alfaRate"
+            "rows","cols","numberOfPatterns","numberOfHiddenNeurons","errorMargin","learningRatio","betaRate"
     ));
     private static int numberOfPatterns = 3;  //numberOfOutputs
     private static int rows = 3;
@@ -48,7 +56,7 @@ public class CMain {
         ArrayList<Double> input = window.getButtonsValues();
 
         ArrayList<Double> networkAnswer = network.getAnswer(input);
-        System.out.println("Network answer:");
+        System.out.println("network.Network answer:");
         for (int i = 0; i< numberOfPatterns; i++) {
             System.out.println(patternsSymbols.get(i)+": "+networkAnswer.get(i));
         }
@@ -65,15 +73,15 @@ public class CMain {
         patterns = new ArrayList<>();
         patternsSymbols = new ArrayList<>();
         for (int i = 0; i< numberOfPatterns; i++) {
-            String filename = "Pattern" + (i+1) + ".txt";
-            patternsSymbols.add(i,PatternFileReader.getPatternSymbol(filename));
+            String filename = dataSetName + "Pattern" + (i+1) + ".txt";
+            patternsSymbols.add(i, PatternFileReader.getPatternSymbol(filename));
             ArrayList<Double> input = PatternFileReader.readFromFile(filename);
             patterns.add(i,input);
         }
     }
     
     private static void loadProperties() {
-        ConfigReader reader = new ConfigReader("config.txt",propertyNames);
+        ConfigReader reader = new ConfigReader(dataSetName+"config.txt",propertyNames);
         Integer integerValue;
         Double doubleValue;
         
@@ -101,9 +109,9 @@ public class CMain {
         if (doubleValue!=null)
             Neuron.LEARNING_RATIO = doubleValue;
 
-        doubleValue = reader.loadDoubleProperty("alfaRate");
+        doubleValue = reader.loadDoubleProperty("betaRate");
         if (doubleValue!=null)
-            Neuron.ALFA_RATE = doubleValue;
+            Neuron.BETA_RATE = doubleValue;
 
         numbersOfInputs = rows * cols;
     }
